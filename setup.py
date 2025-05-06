@@ -1,0 +1,35 @@
+from setuptools import find_packages, setup
+
+setup(
+    name="healthpredictor",
+    version="0.1.0",
+    description="Système de prévision des tendances d'affluence hospitalière",
+    author="Votre Nom",
+    author_email="votre.email@exemple.com",
+    packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        "numpy>=1.20.0",
+        "pandas>=1.3.0",
+        "scikit-learn>=0.24.0",
+        "matplotlib>=3.4.0",
+        "seaborn>=0.11.0",
+        "statsmodels>=0.12.0",
+        "tensorflow>=2.6.0",
+        "keras>=2.6.0",
+        "flask>=2.0.0",
+        "plotly>=5.3.0",
+        "dash>=2.0.0",
+        "pmdarima>=1.8.0",
+        "jupyter>=1.0.0",
+        "ipykernel>=6.0.0",
+    ],
+    python_requires=">=3.8",
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Healthcare Industry",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+    ],
+)

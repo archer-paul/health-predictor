@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPredictor - Résultats des prédictions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.16.1/plotly.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">HealthPredictor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trends">Tendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/predictions">Prédictions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/explore">Exploration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h1 class="card-title">Résultats des prédictions</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h4>Informations</h4>
+                            <p>Période de prédiction : <strong>{{ start_date }}</strong> au <strong>{{ end_date }}</strong> ({{ forecast_days }} jours)</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h3>Comparaison des modèles de prédiction</h3>
+                            <div id="predictions-graph" class="graph-container"></div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h3>Interprétation des résultats</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h4 class="card-title">Points clés</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>Les deux modèles peuvent présenter des prédictions différentes en fonction de leurs approches.</li>
+                                                <li>ARIMA est généralement plus précis à court terme (1-7 jours).</li>
+                                                <li>LSTM peut mieux capturer les tendances complexes à plus long terme (> 7 jours).</li>
+                                                <li>Les pics d'affluence prédits doivent être pris en compte pour la planification des ressources.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h4 class="card-title">Recommandations</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>Utiliser les prédictions comme guide, mais tenir compte d'autres facteurs contextuels.</li>
+                                                <li>Pour la planification à court terme, privilégier les résultats ARIMA.</li>
+                                                <li>Pour les tendances à long terme, considérer davantage les résultats LSTM.</li>
+                                                <li>Réévaluer régulièrement les prédictions avec les données les plus récentes.</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/predictions" class="btn btn-primary">Générer de nouvelles prédictions</a>
+                            <a href="/trends" class="btn btn-secondary">Analyser les tendances</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-muted py-3 mt-4">
+        <div class="container">
+            <p>HealthPredictor &copy; 2025 - Prévision de tendances sanitaires</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Afficher le graphique des prédictions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Charger les prédictions
+            const predictionsData = {{ predictions|safe }};
+            Plotly.newPlot('predictions-graph', predictionsData);
+        });
+    </script>
+</body>
+</html>

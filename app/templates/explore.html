@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPredictor - Exploration des données</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">HealthPredictor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trends">Tendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predictions">Prédictions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/explore">Exploration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h1 class="card-title">Exploration des données</h1>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Découvrez et analysez les données utilisées pour les prédictions d'affluence hospitalière.</p>
+                        
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        {% else %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h2 class="card-title">Statistiques descriptives</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            {{ stats|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h2 class="card-title">Données récentes</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            {{ recent_data|safe }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h2 class="card-title">Information sur le dataset</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Description des variables</h4>
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Variable</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>date</td>
+                                                            <td>Date de l'observation (format YYYY-MM-DD)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>patient_count</td>
+                                                            <td>Nombre total de patients admis pour la journée</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>emergency_count</td>
+                                                            <td>Nombre de patients admis en urgence</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>scheduled_count</td>
+                                                            <td>Nombre de patients programmés</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>day_of_week</td>
+                                                            <td>Jour de la semaine (0-6, 0=Lundi)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>month</td>
+                                                            <td>Mois de l'année (1-12)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>year</td>
+                                                            <td>Année</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>quarter</td>
+                                                            <td>Trimestre (1-4)</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Informations sur le prétraitement</h4>
+                                                <ul>
+                                                    <li>Les données manquantes ont été traitées par interpolation temporelle.</li>
+                                                    <li>Les valeurs aberrantes ont été détectées et corrigées.</li>
+                                                    <li>Les données ont été normalisées pour l'entraînement des modèles.</li>
+                                                    <li>Des features temporelles ont été extraites pour capturer les saisonnalités.</li>
+                                                </ul>
+                                                
+                                                <h4>Sources des données</h4>
+                                                <p>Les données utilisées sont des données pseudo-anonymisées provenant de plusieurs établissements de santé. Elles ont été agrégées par jour pour respecter la confidentialité des patients tout en permettant une analyse des tendances.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-muted py-3 mt-4">
+        <div class="container">
+            <p>HealthPredictor &copy; 2025 - Prévision de tendances sanitaires</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

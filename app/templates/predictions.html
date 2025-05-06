@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthPredictor - Prédictions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.16.1/plotly.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">HealthPredictor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/trends">Tendances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/predictions">Prédictions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/explore">Exploration</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h1 class="card-title">Prédictions d'affluence hospitalière</h1>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">Générez des prédictions d'affluence hospitalière en utilisant nos modèles d'intelligence artificielle (ARIMA et LSTM).</p>
+                        
+                        {% if error %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        {% endif %}
+                        
+                        <form method="post" action="/predictions" class="mt-4">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="start_date" class="form-label">Date de début</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="forecast_days" class="form-label">Nombre de jours à prédire</label>
+                                    <select class="form-select" id="forecast_days" name="forecast_days">
+                                        <option value="7">7 jours</option>
+                                        <option value="14">14 jours</option>
+                                        <option value="30" selected>30 jours</option>
+                                        <option value="60">60 jours</option>
+                                        <option value="90">90 jours</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Générer les prédictions</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h2 class="card-title">Informations sur les modèles</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h3 class="card-title">Modèle ARIMA</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>ARIMA (AutoRegressive Integrated Moving Average) est un modèle statistique utilisé pour analyser et prédire des données de séries temporelles.</p>
+                                        <p>Avantages :</p>
+                                        <ul>
+                                            <li>Interprétabilité des résultats</li>
+                                            <li>Efficace pour les tendances linéaires</li>
+                                            <li>Adapté aux séries stationnaires ou rendues stationnaires</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light">
+                                        <h3 class="card-title">Modèle LSTM</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>LSTM (Long Short-Term Memory) est un type de réseau de neurones récurrents capable de mémoriser des dépendances à long terme dans les séries temporelles.</p>
+                                        <p>Avantages :</p>
+                                        <ul>
+                                            <li>Capture des relations complexes et non-linéaires</li>
+                                            <li>Mémorisation des tendances à long terme</li>
+                                            <li>Adapté aux données saisonnières complexes</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h2 class="card-title">Performance des modèles</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="performance-graph" class="graph-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-muted py-3 mt-4">
+        <div class="container">
+            <p>HealthPredictor &copy; 2025 - Prévision de tendances sanitaires</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Définir la date du jour par défaut
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const dateInput = document.getElementById('start_date');
+            dateInput.valueAsDate = today;
+            
+            // Charger les métriques de performance
+            fetch('/api/model_performance')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        document.getElementById('performance-graph').innerHTML = 
+                            '<div class="alert alert-warning">Les données de performance des modèles ne sont pas disponibles.</div>';
+                        return;
+                    }
+                    
+                    // Afficher le graphique de performance
+                    Plotly.newPlot('performance-graph', JSON.parse(data.chart));
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des performances:', error);
+                    document.getElementById('performance-graph').innerHTML = 
+                        '<div class="alert alert-warning">Les données de performance des modèles ne sont pas disponibles.</div>';
+                });
+        });
+    </script>
+</body>
+</html>
