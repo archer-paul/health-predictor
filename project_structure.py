@@ -15,7 +15,7 @@ HealthPredictor/
 │   ├── __init__.py
 │   ├── data/
 │   │   ├── __init__.py
-│   │   ├── make_dataset.py       # Script pour prétraiter les données
+│   │   ├── make_dataset.py       # Génération de données d'enbtrainements et prétraitement de celles-ci
 │   │   └── data_loader.py        # Fonctions pour charger les données
 │   ├── features/
 │   │   ├── __init__.py
