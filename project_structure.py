@@ -15,7 +15,7 @@ HealthPredictor/
 │   ├── __init__.py
 │   ├── data/
 │   │   ├── __init__.py
-│   │   ├── make_dataset.py       # Génération de données d'enbtrainements et prétraitement de celles-ci
+│   │   ├── make_dataset.py       # Génération de données d'enbtrainements et prétraitement de celles-civenv\Scripts\activate
 │   │   └── data_loader.py        # Fonctions pour charger les données
 │   ├── features/
 │   │   ├── __init__.py
